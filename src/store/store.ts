@@ -4,10 +4,12 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 // Import your reducers here
 import counterReducer from './features/counter/counterSlice';
+import userReducer from './features/user/userSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer
+    counter: counterReducer,
+    user: userReducer
     // Add your reducers here
   },
 });
