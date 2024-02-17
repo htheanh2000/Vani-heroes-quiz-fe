@@ -18,7 +18,7 @@ const Carousel: React.FC<CarouselProps> = ({ items }) => {
                         key={index}
                         className={`w-full ${index === currentIndex ? 'block' : 'hidden'}`}
                     >
-                        <Image sizes="100%" className="w-fit h-auto mx-auto" src={item} width={0} height={0} alt={`Slide ${index}`} />
+                        <Image sizes="100%" className="w-fit max-w-80 h-auto mx-auto" src={item} width={0} height={0} alt={`Slide ${index}`} />
                     </div>
                 ))}
             </div>
@@ -27,7 +27,7 @@ const Carousel: React.FC<CarouselProps> = ({ items }) => {
                     <span
                         key={index}
                         onClick={() => setCurrentIndex(index)}
-                        className={`inline-block h-3 w-3 mx-1 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-400'
+                        className={`inline-block h-3 w-3 mx-1 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray'
                             }`}
                     />
                 ))}
