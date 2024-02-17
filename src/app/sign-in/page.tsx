@@ -2,6 +2,7 @@
 import type { NextPage } from 'next';
 import Button from '@/components/button';
 import Input from '@/components/input';
+import Counter from '@/components/counter';
 
 const SignInPage: NextPage = () => {
   return (
@@ -10,9 +11,8 @@ const SignInPage: NextPage = () => {
         <h2 className="text-2xl font-bold text-center mb-8">Login</h2>
         <div className="space-y-4 mb-6">
           <Input
-            label="email"
-            type="email"
-            placeholder="Your email address"
+            label="phone number"
+            placeholder="Your phonenumber"
           />
           <Input
           label="password"
@@ -20,7 +20,7 @@ const SignInPage: NextPage = () => {
             placeholder="Your password"
           />
         </div>
-
+        <Counter></Counter>
         <Button className="w-full mb-3">
           Login
         </Button>
