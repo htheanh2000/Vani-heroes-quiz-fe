@@ -17,9 +17,6 @@ const OnboardingPage = () => {
                 <div className="text-2xl leading-9 text-black">
                     Take part in challenges with friends
                 </div>
-                {/* <div className="justify-center items-center self-stretch px-16 py-4 mt-9 text-white whitespace-nowrap bg-primary rounded-3xl">
-                    Sign Up
-                </div> */}
                 <Button>Sign Up</Button>
                 <div className="mt-5">
                     <span className="text-gray">Already have an account? </span>

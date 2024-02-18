@@ -5,6 +5,10 @@ const STYLES = {
         bg: 'bg-primary',
         'text-color': 'text-white',
     },
+    secondary: {
+        bg: 'bg-white',
+        'text-color': 'text-primary',
+    },
 };
 
 const SIZES = {
@@ -38,7 +42,7 @@ const Button = (props: TProps) => {
             type={type}
             onClick={onClick}
             disabled={disabled}
-            className={`self-stretch  text-white whitespace-nowrap bg-primary rounded-3xl flex cursor-pointer w-full items-center justify-center ${STYLES[style].bg} ${SIZES[size]} text-base font-medium ${STYLES[style]['text-color']} ${className}`}
+            className={`self-stretch whitespace-nowrap bg-primary rounded-3xl flex cursor-pointer w-full items-center justify-center ${STYLES[style].bg} ${SIZES[size]} text-base font-medium ${STYLES[style]['text-color']} ${className}`}
         >
             {children}
         </button>
