@@ -18,14 +18,14 @@ const initialState: UserState = {
 // Async thunk for signing in
 export const signIn = createAsyncThunk(
   'user/signIn',
-  async ({ phoneNumber, password }: { phoneNumber: string; password: string }, { rejectWithValue }) => {
+  async ({ phonenumber, password }: { phonenumber: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ phonenumber: phoneNumber, password }),
+        body: JSON.stringify({ phonenumber, password }),
       });
 
       const data = await response.json();
