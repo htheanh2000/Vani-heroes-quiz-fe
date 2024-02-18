@@ -1,5 +1,6 @@
 "use client"
 import Button from "@/components/button"
+import LoadingScreen from "@/components/loading"
 import ModalBox from "@/components/modalBox"
 import ProgressBar from "@/components/progressBar"
 import Tooltip from "@/components/tooltip"
@@ -80,7 +81,7 @@ const QuizPage = () => {
         }
     }
 
-    if (!questions) return null;
+    if (!questions) return <LoadingScreen/>;
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-primary px-6 max-w-md">
