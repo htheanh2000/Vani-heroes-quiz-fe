@@ -21,6 +21,8 @@ const QuizPage = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [answerValidation, setAnswerValidation] = useState<'correct' | 'incorrect' | null>(null);
+
 
     const handleExitAttempt = () => {
         setIsModalOpen(true);
@@ -28,7 +30,6 @@ const QuizPage = () => {
 
     const handleConfirmExit = () => {
         // Handle the quiz exit logic here
-        console.log('Quiz exited');
         setIsModalOpen(false);
         router.replace('/')
         // Redirect or perform other actions as needed
@@ -43,14 +44,44 @@ const QuizPage = () => {
         dispatch(getQuizById({ id: quizId }))
     }, [])
 
-    const { questions, status } = useAppSelector((state: RootState) => state.quiz);
-    // console.log("questions", questions);
+    const { questions } = useAppSelector((state: RootState) => state.quiz);
 
     const handleSubmit = () => {
-        if (selectedAnswer == questions[currentQuestion].options.optionId) {
+        
+        if(selectedAnswer == null) return ;    
+        const isCorrect =  questions[currentQuestion].options[selectedAnswer].isCorrect;
+        setAnswerValidation(isCorrect ? 'correct' : 'incorrect');
+        if(!isCorrect)  return;
+        // Wait 1000ms before moving to the next question or showing results
+        setTimeout(() => {
+            if (currentQuestion < questions.length - 1) {
+                // Move to the next question
+                setCurrentQuestion(currentQuestion + 1);
+                // Reset selected answer and validation state for the next question
+                setSelectedAnswer(null);
+                setAnswerValidation(null);
+            } else {
+                // Handle quiz completion
+                console.log('Quiz completed');
+                // Redirect or update state to show quiz results
+            }
+        }, 1000);
+    };
 
+    const colorCheck = (index: null) => {
+        console.log("answerValidation",answerValidation);
+        if(selectedAnswer != index) return '' ;
+
+        // only check selectedAnswer
+        if(!answerValidation) {
+            return 'bg-primary text-white' ;
+        }
+        else {
+            if(answerValidation === 'correct') return 'border-green-500 bg-green-100'
+            else return 'border-red-500 bg-red-100'
         }
     }
+
     if (!questions) return null;
 
     return (
@@ -59,7 +90,6 @@ const QuizPage = () => {
                 isStart ?
                     <div className="w-full h-full py-8">
                         <header className="flex justify-between w-full items-center">
-
                             <Tooltip message={questions[currentQuestion].hint}>
                                 <div className="rounded bg-slate-100/20 flex items-center justify-center p-2 text-white">
                                     <MdQuiz></MdQuiz>
@@ -75,10 +105,16 @@ const QuizPage = () => {
                             <p className="text-md mt-4 font-medium">{questions[currentQuestion].text}</p>
                             <div className="mt-4">
                                 {
-                                    questions[currentQuestion].options.map((option: any) =>
-                                        <div onClick={() => setSelectedAnswer(option.optionId)} key={option.text}
-                                            className={`border border-primary rounded-xl mb-4 py-3 px-4 cursor-pointer ${selectedAnswer === option.optionId ? 'bg-primary/80 text-white' : ''
-                                                }`}>
+                                    questions[currentQuestion].options.map((option: any, index:any) =>
+                                        <div onClick={() => {
+                                            setSelectedAnswer(index) ;
+                                             setAnswerValidation(null)
+                                        }} key={option.text}
+                                        className={twMerge(
+                                            `border rounded-xl mb-4 py-3 px-4 cursor-pointer font-medium`,
+                                            colorCheck(index),
+                                        )}>
+           
                                             <p className="font-medium">{option.text}</p>
                                         </div>
                                     )
