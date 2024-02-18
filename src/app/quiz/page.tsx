@@ -38,7 +38,6 @@ const QuizPage = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-    console.log(selectedAnswer);
 
     useEffect(() => {
         dispatch(getQuizById({ id: quizId }))
@@ -62,16 +61,15 @@ const QuizPage = () => {
                 setAnswerValidation(null);
             } else {
                 // Handle quiz completion
-                console.log('Quiz completed');
+                router.replace('/quiz/completion')
+                // console.log('Quiz completed');
                 // Redirect or update state to show quiz results
             }
         }, 1000);
     };
 
     const colorCheck = (index: null) => {
-        console.log("answerValidation",answerValidation);
         if(selectedAnswer != index) return '' ;
-
         // only check selectedAnswer
         if(!answerValidation) {
             return 'bg-primary text-white' ;
