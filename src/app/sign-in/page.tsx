@@ -1,29 +1,54 @@
 "use client"
 import type { NextPage } from 'next';
 import Button from '@/components/button';
-import { useAppDispatch } from '@/store/store';
+import { useAppDispatch, useAppSelector } from '@/store/store';
 import { signIn } from '@/store/features/user/userSlice';
 import * as Yup from 'yup'
 import { Form, Formik } from 'formik';
 import Field from '@/components/form/field';
+import Error from "@/components/form/error";
+import Link from 'next/link';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { clearUserState } from "@/store/features/user/userSlice";
+
 const SignInPage: NextPage = () => {
 
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const initialValues = {
     phonenumber: "",
     password: "",
   };
 
+  const {username, status, error } = useAppSelector((state) => state.user);
+
+
   const validationSchema = Yup.object({
     phonenumber: Yup.string().required("Phone number is required"),
-    password: Yup.string().required("Password is required"),
+    password: Yup.string().required("Password is required").min(6, "Password must be at least 6 characters long"),
   });
 
   const onSubmit = (values: any, { setSubmitting }: any) => {
+    if(status === "loading") {
+      return;
+    }
     setSubmitting(false);
     dispatch(signIn(values))
   };
+
+  useEffect(() => {
+    dispatch(clearUserState())
+  },[dispatch])
+
+
+  useEffect(() => {
+    if (localStorage.getItem('access-token')) {
+      router.push("/dashboard");
+    }
+  }, [router]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-6">
       <div className="w-full max-w-md">
@@ -48,13 +73,20 @@ const SignInPage: NextPage = () => {
                   className="mt-8"
                 ></Field>
 
+                <Error>{error}</Error>
+                
                 <Button
+                loading={status === 'loading'}
+
                   type="submit"
                   className="mt-8 w-full mx-auto"
                 >
                   Sign in
                 </Button>
 
+                <Link href='sign-up'>
+                    <p className="font-medium my-4 text-center text-primary">Doesn't have account ?</p>
+                    </Link>
                 <p className="text-xs text-center text-gray mt-6">
                     By continuing, you agree to the <strong>Terms of Services & Privacy Policy.</strong>
                 </p>

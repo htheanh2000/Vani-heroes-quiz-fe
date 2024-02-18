@@ -5,11 +5,13 @@ import { RootState } from '../../store';
 interface UserState {
   username: string;
   phonenumber:string;
+  error: string;
   // include other user details as needed
   status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: UserState = {
+  error: '' ,
   phonenumber: '',
   username: '',
   status: 'idle',
@@ -34,7 +36,7 @@ export const signIn = createAsyncThunk(
         throw new Error(data.message || 'Unable to sign in');
       }
 
-      return data; // Assuming this is the user data you want to store -> shoule be access_token
+      return data.dataValues; // Assuming this is the user data you want to store -> shoule be access_token
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -60,7 +62,7 @@ export const signUp = createAsyncThunk(
         throw new Error(data.message || 'Unable to sign up');
       }
 
-      return data; // Assuming this is the user data you want to store -> shoule be access_token
+      return data.dataValues; // Assuming this is the user data you want to store -> shoule be access_token
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -71,35 +73,45 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+      logout: () => {
+        localStorage.removeItem('access_token');
+      },
+      clearUserState: (state) => {
+        state.status = 'idle'
+        state.error = ''
+      },
     // Add any synchronous reducers here if necessary
   },
   extraReducers: (builder) => {
     builder
+    
       .addCase(signIn.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(signIn.fulfilled, (state, action) => {
         localStorage.setItem('access_token', JSON.stringify(action.payload.access_token))
-        // state.phoneNumber = action.payload.phoneNumber;
         state.status = 'idle';
-        // set other user data here
       })
-      .addCase(signIn.rejected, (state) => {
+      .addCase(signIn.rejected, (state,action: any) => {
         state.status = 'failed';
+        state.error = action.payload 
       })
       .addCase(signUp.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(signUp.fulfilled, (state, action) => {
+        console.log("action.payload",action.payload);
+        
         localStorage.setItem('access_token', JSON.stringify(action.payload.access_token))
-        // state.phoneNumber = action.payload.phoneNumber;
         state.status = 'idle';
-        // set other user data here
       })
       .addCase(signUp.rejected, (state) => {
         state.status = 'failed';
       });
   },
 });
+
+export const { logout, clearUserState } = userSlice.actions
+
 
 export default userSlice.reducer;
