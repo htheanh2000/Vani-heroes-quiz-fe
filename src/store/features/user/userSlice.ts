@@ -3,13 +3,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 
 interface UserState {
-  phoneNumber: string | null;
+  username: string;
+  phonenumber:string;
   // include other user details as needed
   status: 'idle' | 'loading' | 'failed';
 }
 
 const initialState: UserState = {
-  phoneNumber: null,
+  phonenumber: '',
+  username: '',
   status: 'idle',
 };
 
@@ -18,7 +20,7 @@ export const signIn = createAsyncThunk(
   'user/signIn',
   async ({ phoneNumber, password }: { phoneNumber: string; password: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch('https://vani-heroes-quiz-a163cb582add.herokuapp.com/auth/signin', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,6 +32,32 @@ export const signIn = createAsyncThunk(
 
       if (!response.ok) {
         throw new Error(data.message || 'Unable to sign in');
+      }
+
+      return data; // Assuming this is the user data you want to store -> shoule be access_token
+    } catch (error: any) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// Async thunk for signing up
+export const signUp = createAsyncThunk(
+  'user/signUp',
+  async ({ phonenumber, username, password }: { phonenumber: string; username:string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phonenumber,username, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Unable to sign up');
       }
 
       return data; // Assuming this is the user data you want to store -> shoule be access_token
@@ -57,6 +85,18 @@ export const userSlice = createSlice({
         // set other user data here
       })
       .addCase(signIn.rejected, (state) => {
+        state.status = 'failed';
+      })
+      .addCase(signUp.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        localStorage.setItem('access_token', JSON.stringify(action.payload.access_token))
+        // state.phoneNumber = action.payload.phoneNumber;
+        state.status = 'idle';
+        // set other user data here
+      })
+      .addCase(signUp.rejected, (state) => {
         state.status = 'failed';
       });
   },
