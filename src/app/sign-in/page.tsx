@@ -44,10 +44,11 @@ const SignInPage: NextPage = () => {
 
 
   useEffect(() => {
-    if (localStorage.getItem('access-token')) {
-      router.push("/dashboard");
+    const token =  localStorage.getItem('access_token') ;
+    if (token) {
+      router.push("/quiz");
     }
-  }, [router]);
+  }, [router, dispatch,status]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white px-6">

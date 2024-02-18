@@ -36,7 +36,7 @@ export const signIn = createAsyncThunk(
         throw new Error(data.message || 'Unable to sign in');
       }
 
-      return data.dataValues; // Assuming this is the user data you want to store -> shoule be access_token
+      return data; // Assuming this is the user data you want to store -> shoule be access_token
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -62,7 +62,7 @@ export const signUp = createAsyncThunk(
         throw new Error(data.message || 'Unable to sign up');
       }
 
-      return data.dataValues; // Assuming this is the user data you want to store -> shoule be access_token
+      return data; // Assuming this is the user data you want to store -> shoule be access_token
     } catch (error: any) {
       return rejectWithValue(error.message);
     }
@@ -89,7 +89,7 @@ export const userSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(signIn.fulfilled, (state, action) => {
-        localStorage.setItem('access_token', JSON.stringify(action.payload.access_token))
+        localStorage.setItem('access_token', action.payload.access_token)
         state.status = 'idle';
       })
       .addCase(signIn.rejected, (state,action: any) => {
@@ -102,7 +102,7 @@ export const userSlice = createSlice({
       .addCase(signUp.fulfilled, (state, action) => {
         console.log("action.payload",action.payload);
         
-        localStorage.setItem('access_token', JSON.stringify(action.payload.access_token))
+        localStorage.setItem('access_token', action.payload.access_token)
         state.status = 'idle';
       })
       .addCase(signUp.rejected, (state) => {

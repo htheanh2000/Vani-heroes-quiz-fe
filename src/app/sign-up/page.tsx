@@ -21,10 +21,11 @@ const SignUpPage = () => {
   },[dispatch])
   
   useEffect(() => {
-    if (localStorage.getItem('access-token')) {
-      router.push("/dashboard");
+    const token =  localStorage.getItem('access_token') ;
+    if (token) {
+      router.push("/quiz");
     }
-  }, [router]);
+  }, [router, dispatch, status]);
 
   const initialValues = {
     username: "",

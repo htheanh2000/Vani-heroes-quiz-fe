@@ -1,4 +1,5 @@
 // src/features/user/userSlice.ts
+import axiosInstance from '@/utils/axiosInstance';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
 
@@ -17,25 +18,18 @@ const initialState: QuizState = {
 
 // Async thunk for signing in
 export const getQuizById = createAsyncThunk(
-  'quiz/',
-  async ({ id}: { id:string }, { rejectWithValue }) => {
+  'quiz/getById', 
+  async ({ id }: { id: string }, { rejectWithValue }) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quizzes/${id}`, {
-        method: 'GET',
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Unable to get quiz');
-      }
-
-      return data;
+      const response = await axiosInstance.get(`/quizzes/${id}`);
+      return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.message);
+      const message = error.response?.data?.message || 'Unable to get quiz';
+      return rejectWithValue(message);
     }
   }
 );
+
 
 export const quizSlice = createSlice({
   name: 'quiz',

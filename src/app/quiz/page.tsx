@@ -16,8 +16,8 @@ const QuizPage = () => {
     const dispatch = useAppDispatch();
     const router = useRouter()
     const searchParams = useSearchParams()
-    const [isStart, setIsStart] = useState(true)
-    const quizId = searchParams.get('id') || '';
+    const [isStart, setIsStart] = useState(false)
+    const quizId = searchParams.get('id') || '3';
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
