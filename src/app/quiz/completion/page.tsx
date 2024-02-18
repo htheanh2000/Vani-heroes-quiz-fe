@@ -1,13 +1,8 @@
 import Button from "@/components/button";
 import Link from "next/link";
 
-interface QuizCompletionProps {
-  totalQuestions: number;
-  correctAnswers: number;
-}
 
-
-const QuizCompletion: React.FC<QuizCompletionProps> = ({ totalQuestions, correctAnswers }) => {
+const QuizCompletion = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-primary px-6 text-white">
       <h2 className="text-3xl font-bold mb-4">Quiz Completed!</h2>

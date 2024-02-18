@@ -41,7 +41,7 @@ const QuizPage = () => {
 
     useEffect(() => {
         dispatch(getQuizById({ id: quizId }))
-    }, [])
+    }, [dispatch, quizId])
 
     const { questions } = useAppSelector((state: RootState) => state.quiz);
 

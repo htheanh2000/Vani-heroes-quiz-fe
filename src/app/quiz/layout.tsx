@@ -1,7 +1,7 @@
 "use client"
 import { useAppDispatch } from "@/store/store";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
 export default function QuizLayout({
     children,
@@ -18,11 +18,11 @@ export default function QuizLayout({
         router.push("/onboarding") 
       }
 
-    },[dispatch])
+    },[dispatch, router])
 
     return (
-        <div>
+        <Suspense fallback={<div>Loading...</div>}>
             {children}
-        </div>
+        </Suspense>
     )
   }

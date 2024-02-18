@@ -86,7 +86,7 @@ const SignInPage: NextPage = () => {
                 </Button>
 
                 <Link href='sign-up'>
-                    <p className="font-medium my-4 text-center text-primary">Doesn't have account ?</p>
+                    <p className="font-medium my-4 text-center text-primary">Doesn&apos;t have account ?</p>
                     </Link>
                 <p className="text-xs text-center text-gray mt-6">
                     By continuing, you agree to the <strong>Terms of Services & Privacy Policy.</strong>
