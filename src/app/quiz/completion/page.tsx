@@ -10,7 +10,7 @@ const QuizCompletion = () => {
         You solved all the quizzes correctly!
       </p>
       <div className="flex flex-col space-y-4">
-        <Link href='/'>
+        <Link href='/onboarding'>
         <Button  style="secondary">Back to Home</Button>
         </Link>
       </div>

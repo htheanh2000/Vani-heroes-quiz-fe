@@ -20,7 +20,9 @@ const QuizPage = () => {
     const [isStart, setIsStart] = useState(false)
     const quizId = searchParams.get('id') || '3';
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [selectedAnswer, setSelectedAnswer] = useState(null);
+    // const [selectedAnswer, setSelectedAnswer] = useState(null);
+    const [selectedAnswers, setSelectedAnswers] = useState<number[]>([]);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [answerValidation, setAnswerValidation] = useState<'correct' | 'incorrect' | null>(null);
 
@@ -46,42 +48,56 @@ const QuizPage = () => {
 
     const { questions } = useAppSelector((state: RootState) => state.quiz);
 
+    const handleSelectAnswer = (index: number) => {
+        setAnswerValidation(null)
+        // Toggle selection for multiple answers
+        if (selectedAnswers.includes(index)) {
+            setSelectedAnswers(selectedAnswers.filter((answer) => answer !== index));
+        } else {
+            setSelectedAnswers([...selectedAnswers, index]);
+        }
+        // Reset validation state upon new selection
+    };
+
     const handleSubmit = () => {
-        
-        if(selectedAnswer == null) return ;    
-        const isCorrect =  questions[currentQuestion].options[selectedAnswer].isCorrect;
+        if (selectedAnswers.length === 0) return;
+        // Find all correct answers for the current question
+        const correctAnswers = questions[currentQuestion].options
+            .map((option: { isCorrect: any }, index: any) => option.isCorrect ? index : null)
+            .filter((index: null) => index !== null);
+
+        // Check if all selected answers are correct and the number of selected answers matches the number of correct answers
+        const isCorrect = selectedAnswers.length === correctAnswers.length &&
+            selectedAnswers.every(index => questions[currentQuestion].options[index].isCorrect);
+
         setAnswerValidation(isCorrect ? 'correct' : 'incorrect');
-        if(!isCorrect)  return;
-        // Wait 1000ms before moving to the next question or showing results
+
+        setTimeout(() => {
+            setAnswerValidation(null);
+            setSelectedAnswers([]); // Clear selected answers for the next question
+        }, 1000);
+
+        if (!isCorrect) return;
         setTimeout(() => {
             if (currentQuestion < questions.length - 1) {
-                // Move to the next question
                 setCurrentQuestion(currentQuestion + 1);
-                // Reset selected answer and validation state for the next question
-                setSelectedAnswer(null);
-                setAnswerValidation(null);
             } else {
-                // Handle quiz completion
-                router.replace('/quiz/completion')
-                // console.log('Quiz completed');
-                // Redirect or update state to show quiz results
+                router.replace('/quiz/completion');
             }
         }, 1000);
     };
 
-    const colorCheck = (index: null) => {
-        if(selectedAnswer != index) return '' ;
-        // only check selectedAnswer
-        if(!answerValidation) {
-            return 'bg-primary text-white' ;
+    const colorCheck = (index: number) => {
+        if (!selectedAnswers.includes(index)) return '';
+        if (!answerValidation) {
+            return 'bg-primary text-white';
+        } else {
+            return questions[currentQuestion].options[index].isCorrect ? 'border-green-500 bg-green-100' : 'border-red-500 bg-red-100';
         }
-        else {
-            if(answerValidation === 'correct') return 'border-green-500 bg-green-100'
-            else return 'border-red-500 bg-red-100'
-        }
-    }
+    };
 
-    if (!questions) return <LoadingScreen/>;
+
+    if (!questions) return <LoadingScreen />;
 
     return (
         <div className="flex flex-col items-center justify-center h-screen bg-primary px-6 max-w-md">
@@ -94,7 +110,7 @@ const QuizPage = () => {
                                     <MdQuiz></MdQuiz>
                                 </div>
                             </Tooltip>
-                            <ProgressBar className="w-40" value={currentQuestion+1} max={questions.length} />
+                            <ProgressBar className="w-40" value={currentQuestion + 1} max={questions.length} />
                             <div onClick={handleExitAttempt} className="rounded bg-slate-100/20 flex items-center justify-center p-2 text-white">
                                 <MdExitToApp className="text-xl" />
                             </div>
@@ -104,16 +120,14 @@ const QuizPage = () => {
                             <p className="text-md mt-4 font-medium">{questions[currentQuestion].text}</p>
                             <div className="mt-4">
                                 {
-                                    questions[currentQuestion].options.map((option: any, index:any) =>
-                                        <div onClick={() => {
-                                            setSelectedAnswer(index) ;
-                                             setAnswerValidation(null)
-                                        }} key={option.text}
-                                        className={twMerge(
-                                            `border rounded-xl mb-4 py-3 px-4 cursor-pointer font-medium`,
-                                            colorCheck(index),
-                                        )}>
-           
+                                    questions[currentQuestion].options.map((option: any, index: any) =>
+                                        <div key={option.text}
+                                            onClick={() => handleSelectAnswer(index)}
+                                            className={twMerge(
+                                                `border rounded-xl mb-4 py-3 px-4 cursor-pointer font-medium`,
+                                                colorCheck(index),
+                                            )}>
+
                                             <p className="font-medium">{option.text}</p>
                                         </div>
                                     )
