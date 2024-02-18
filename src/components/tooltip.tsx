@@ -1,4 +1,5 @@
-import { ReactNode, useState } from 'react';
+import { ReactNode, useRef, useState } from 'react';
+import { useOnClickOutside } from 'usehooks-ts'
 
 interface TooltipProps {
   message: string;
@@ -7,14 +8,24 @@ interface TooltipProps {
 
 const Tooltip: React.FC<TooltipProps> = ({ message, children }) => {
   const [show, setShow] = useState(false);
+  const tooltipRef = useRef(null)
+
+  const handleClickOutside = () => {
+    // Your custom logic here
+    console.log('clicked outside')
+    setShow(false)
+  }
 
   const toggleTooltip = () => {
     setShow(!show);
   };
 
+  useOnClickOutside(tooltipRef, handleClickOutside)
+
+
   return (
     <div className="flex relative flex-col  ">
-      <div onClick={toggleTooltip} className="cursor-pointer">
+      <div ref={tooltipRef} onClick={toggleTooltip} className="cursor-pointer">
         {children}
       </div>
       {show && (
