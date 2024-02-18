@@ -12,6 +12,8 @@ axiosInstance.interceptors.request.use(
     // Assuming the access token is stored in localStorage
     const token = localStorage.getItem('access_token');
     if (token) {
+      // axios.defaults.headers.common['Authorization'] = `Bearer ${token}` 
+
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     // You can modify config further here, e.g., set other headers

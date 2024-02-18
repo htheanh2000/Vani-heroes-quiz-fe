@@ -93,13 +93,13 @@ const QuizPage = () => {
                                     <MdQuiz></MdQuiz>
                                 </div>
                             </Tooltip>
-                            <ProgressBar className="w-40" value={10} max={20} />
+                            <ProgressBar className="w-40" value={currentQuestion+1} max={questions.length} />
                             <div onClick={handleExitAttempt} className="rounded bg-slate-100/20 flex items-center justify-center p-2 text-white">
                                 <MdExitToApp className="text-xl" />
                             </div>
                         </header>
                         <article className="bg-white rounded-2xl w-full p-4 mt-8">
-                            <span className="text-primary/80 uppercase font-medium text-sm my-4">Question {currentQuestion + 1} of 10</span>
+                            <span className="text-primary/80 uppercase font-medium text-sm my-4">Question {currentQuestion + 1} of {questions.length}</span>
                             <p className="text-md mt-4 font-medium">{questions[currentQuestion].text}</p>
                             <div className="mt-4">
                                 {
