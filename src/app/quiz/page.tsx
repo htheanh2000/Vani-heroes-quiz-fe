@@ -100,7 +100,7 @@ const QuizPage = () => {
     if (!questions) return <LoadingScreen />;
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-primary px-6 max-w-md">
+        <div className="flex flex-col items-center justify-center h-screen bg-primary px-6 max-w-md mx-auto">
             {
                 isStart ?
                     <div className="w-full h-full py-8">
@@ -145,7 +145,7 @@ const QuizPage = () => {
                             message="Are you sure you want to exit the quiz? All progress will be lost."
                         />
                     </div> :
-                    <div>
+                    <div className="mx-auto">
                         <h2 className="text-white font-medium text-center mb-8 text-2xl">Take a quiz and receive 1000$ coin</h2>
                         <Image sizes="100%" className="w-fit max-w-80 h-auto mx-auto" src={'/images/onboarding-1.png'} width={0} height={0} alt={``} />
                         <Button onClick={() => setIsStart(true)} style="secondary"> Start Quiz</Button>
